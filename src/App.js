@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import Frase from "./Components/Frase";
 import styled from "@emotion/styled";
 
 const Botton = styled.button`
@@ -6,19 +7,51 @@ const Botton = styled.button`
     top left,
     #007d35 0%,
     #007d35 40%,
-    #of574e 100%
+    #0f574e 100%
   );
-  background-size: 300px
-  font-family: Arial, helvetica, sans-serif;
+  background-size: 300px;
+  font-family: Arial, Helvetica, sans-serif;
   color: #fff;
-  margin-top:3rem;
-  padding: 1rem 3 rem;
-  font-size:2rem;
+  margin-top: 3rem;
+  padding: 1rem 3rem;
+  font-size: 2rem;
   border: 2px solid black;
+  transition: background-size 0.8s ease;
+
+  :hover {
+    cursor: pointer;
+    background-size: 400px;
+  }
+`;
+
+const Contenedor = styled.div`
+  display: flex;
+  align-items: center;
+  padding-top: 5rem;
+  flex-direction: column;
 `;
 
 function App() {
-  return <Botton>Breaking Bad</Botton>;
+  const [frase, setFrase] = useState({});
+
+  useEffect(() => {
+    consultarApi();
+  }, []);
+
+  const consultarApi = async () => {
+    const api = await fetch(
+      "https://breaking-bad-quotes.herokuapp.com/v1/quotes"
+    );
+    const frase = await api.json();
+
+    setFrase(frase[0]);
+  };
+  return (
+    <Contenedor>
+      <Frase frase={frase} />
+      <Botton onClick={consultarApi}>Obtener Frase</Botton>
+    </Contenedor>
+  );
 }
 
 export default App;
